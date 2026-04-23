@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useDebounceValue } from 'usehooks-ts'
+import { useDebounceValue, useDebounceCallback } from 'usehooks-ts'
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { signUpSchema } from '@/schemas/signUpSchema';
@@ -23,9 +23,9 @@ const page = () => {
   const [isCheckingUsername, setIsCheckingUsername] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [debouncedUsername] = useDebounceValue(username, 300);
+  const debounced = useDebounceCallback(setUsername, 300);
 
-  console.log(debouncedUsername)
+  console.log(debounced)
   const router = useRouter();
 
   //zod
@@ -41,11 +41,11 @@ const page = () => {
 
   useEffect(() => {
     const checkUsername = async () => {
-      if (debouncedUsername) {
+      if (username) {
         setIsCheckingUsername(true);
         setUsernameMessage('');
         try {
-          const response = await axios.get(`/api/check-username-unique?username=${debouncedUsername}`);
+          const response = await axios.get(`/api/check-username-unique?username=${username}`);
           setUsernameMessage(response.data.message)
         } catch (error) {
           const axiosError = error as AxiosError<ApiResponse>;
@@ -58,7 +58,7 @@ const page = () => {
     }
 
     checkUsername();
-  }, [debouncedUsername])
+  }, [username])
 
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
@@ -104,10 +104,16 @@ const page = () => {
                       {...field}
                       onChange={(e) => {
                         field.onChange(e)
-                        setUsername(e.target.value)
+                        debounced(e.target.value)
                       }}
                     />
                   </FormControl>
+                  {isCheckingUsername && 
+                    <Loader2 className='animate-spin' />
+                  }
+                  <p className={`text-sm ${usernameMessage === "Username is available!!" ? "text-green-500": "text-red-500"}`}>
+                    test {usernameMessage}
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}
