@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useDebounceValue, useDebounceCallback } from 'usehooks-ts'
+import { useDebounceCallback } from 'usehooks-ts'
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { signUpSchema } from '@/schemas/signUpSchema';
@@ -108,11 +108,11 @@ const page = () => {
                       }}
                     />
                   </FormControl>
-                  {isCheckingUsername && 
+                  {isCheckingUsername &&
                     <Loader2 className='animate-spin' />
                   }
-                  <p className={`text-sm ${usernameMessage === "Username is available!!" ? "text-green-500": "text-red-500"}`}>
-                    test {usernameMessage}
+                  <p className={`text-sm ${usernameMessage === "Username is available!!" ? "text-green-500" : "text-red-500"}`}>
+                    {usernameMessage}
                   </p>
                   <FormMessage />
                 </FormItem>
