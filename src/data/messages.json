@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Welcome Message",
+    "content": "Thanks for joining our platform! We're excited to have you.",
+    "receivedTime": "2 minutes ago"
+  },
+  {
+    "title": "New Comment",
+    "content": "Someone commented on your post. Check it out!",
+    "receivedTime": "10 minutes ago"
+  },
+  {
+    "title": "Update Available",
+    "content": "A new update is available. Please refresh your app.",
+    "receivedTime": "1 hour ago"
+  },
+  {
+    "title": "Reminder",
+    "content": "Don't forget to complete your profile for better recommendations.",
+    "receivedTime": "3 hours ago"
+  },
+  {
+    "title": "Weekly Summary",
+    "content": "Here's what happened this week in your account.",
+    "receivedTime": "1 day ago"
+  }
+]

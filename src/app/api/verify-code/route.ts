@@ -8,7 +8,18 @@ export async function POST(request: Request) {
     try {
         const { username, code } = await request.json();
 
+        if (!username || !code) {
+            return Response.json({
+                success: false,
+                message: 'Username and code are required'
+            }, { status: 400 });
+        }
+
         const decodedUserName = decodeURIComponent(username);
+
+        const trimmedCode = code.trim();
+
+        console.log('Verification attempt - Username:', decodedUserName, 'Code:', trimmedCode, 'Code Type:', typeof code);
 
         const user = await UserModel.findOne({ username: decodedUserName })
 
@@ -19,8 +30,17 @@ export async function POST(request: Request) {
             }, { status: 400 });
         }
 
-        const isCodeValid = user.verifyCode === code;
+        if (user.isVerified) {
+            return Response.json({
+                success: false,
+                message: 'User is already verified!!'
+            }, { status: 400 });
+        }
+
+        const isCodeValid = user.verifyCode === trimmedCode;
         const isCodeNotExpired = new Date(user.verifyCodeExpiry) > new Date();
+
+        console.log('Code comparison - Stored:', user.verifyCode, 'Received:', trimmedCode, 'Match:', isCodeValid, 'Expired:', !isCodeNotExpired);
 
         if (isCodeValid && isCodeNotExpired) {
             user.isVerified = true;

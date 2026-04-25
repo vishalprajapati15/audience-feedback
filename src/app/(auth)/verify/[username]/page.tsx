@@ -22,20 +22,23 @@ const VerifyAccount = () => {
 
     const onSubmit = async (data: z.infer<typeof verifySchema>) => {
         try {
+            if (!params.username) {
+                toast.error("Username not found");
+                return;
+            }
+
             const response = await axios.post(`/api/verify-code`, {
                 username: params.username,
-                code: data.code
+                code: data.code.trim()
             });
 
             toast.success(response.data.message);
-            router.replace('sign-in')
+            router.replace('/sign-in')
         } catch (error) {
             console.error('Error in verifying of user: ', error);
             const axiosError = error as AxiosError<ApiResponse>;
-
-            toast("Error", {
-                description: axiosError.response?.data.message,
-            });
+            const errorMessage = axiosError.response?.data.message || 'Failed to verify code. Please try again.';
+            toast.error(errorMessage);
         }
     }
 
@@ -59,7 +62,9 @@ const VerifyAccount = () => {
                                     <FormLabel>Verification Code</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder='Code'
+                                            placeholder='Enter 6-digit code'
+                                            maxLength={6}
+                                            inputMode='numeric'
                                             {...field}
                                         />
                                     </FormControl>

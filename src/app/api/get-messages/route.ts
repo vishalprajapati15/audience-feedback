@@ -21,23 +21,25 @@ export async function GET(request: Request) {
     const userId = new mongoose.Types.ObjectId(user._id);
 
     try {
-        const user = await UserModel.aggregate([
-            { $match: { id: userId } },
+        console.log('Fetching messages for userId:', userId);
+        const messages = await UserModel.aggregate([
+            { $match: { _id: userId } },
             { $unwind: '$messages' },
             { $sort: { 'messages.createdAt': -1 } },
             { $group: { _id: '$_id', messages: { $push: '$messages' } } }
         ]);
 
-        if (!user || user.length === 0) {
+        if (!messages || messages.length === 0) {
+            console.log('User not found with id:', userId);
             return Response.json({
                 success: false,
-                message: 'User not found!!'
+                message: 'Messages not found!!'
             }, { status: 401 });
         }
 
         return Response.json({
             success: true,
-            messages: user[0].messages,
+            messages: messages[0].messages,
             message: 'Message fetched successfully!!'
         }, { status: 200 });
     } catch (error) {
