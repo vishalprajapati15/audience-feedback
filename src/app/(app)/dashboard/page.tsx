@@ -28,7 +28,8 @@ const page = () => {
   const { data: session } = useSession()
 
   const form = useForm({
-    resolver: zodResolver(acceptMessageSchema)
+    resolver: zodResolver(acceptMessageSchema),
+    defaultValues: { acceptMessage: false }
   });
 
   const { register, watch, setValue } = form;
@@ -55,6 +56,7 @@ const page = () => {
     setIsSwitchLoading(false);
     try {
       const response = await axios.get<ApiResponse>('/api/get-messages');
+      console.log('Messages Response:', response.data);
       setMessages(response.data.messages || []);
       if (refresh) {
         toast.success('Showing Latest messages!!');
@@ -62,10 +64,11 @@ const page = () => {
 
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>
+      console.error('Error fetching messages:', axiosError);
       toast.error(axiosError.response?.data.message || 'Failed to fetch message setting!!');
     }
     finally {
-      setIsLoading(true);
+      setIsLoading(false);
       setIsSwitchLoading(false);
     }
   }, [setIsLoading, setMessages]);
@@ -82,7 +85,7 @@ const page = () => {
   const handleSwitchChange = async ()=>{
     try {
       const response = await axios.post<ApiResponse>('/api/accept-message', {
-        acceptMessages: !acceptMessages
+        acceptMessage: !acceptMessages
       })
       setValue('acceptMessage', !acceptMessages);
       toast.success(response.data.message)
@@ -124,9 +127,8 @@ const page = () => {
         </div>
       </div>
       <div>
-        <Switch 
-          {...register('acceptMessage')}
-          checked = {acceptMessages}
+        <Switch
+          checked={acceptMessages}
           onCheckedChange={handleSwitchChange}
           disabled={isSwitchLoading}
         />
@@ -143,6 +145,7 @@ const page = () => {
       >
         {isLoading? (
           <Loader2 className="h-4 w-4 animate-spin" />
+          
         ): (
           <RefreshCcw className="h-4 w-4"/>
         )}

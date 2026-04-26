@@ -5,9 +5,11 @@ import UserModel from "@/model/user.model";
 import { User } from "next-auth";
 
 
-export async function DELETE(request: Request, { params }: { params: { messageid: string } }) {
+export async function DELETE(request: Request, context: { params: any }) {
 
-    const messageId = params.messageid;
+    // params can be a Promise in Next.js; await it before accessing
+    const params = await context.params;
+    const messageId = params['message-id'];
 
     await dbConnect();
     const session = await getServerSession(authOptions);

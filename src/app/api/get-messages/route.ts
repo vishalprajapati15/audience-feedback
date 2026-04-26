@@ -30,12 +30,14 @@ export async function GET(request: Request) {
         ]);
 
         if (!messages || messages.length === 0) {
-            console.log('User not found with id:', userId);
+            console.log('No messages found for userId:', userId);
             return Response.json({
                 success: false,
                 message: 'Messages not found!!'
             }, { status: 401 });
         }
+
+        console.log('Message Received : ', messages[0].messages)
 
         return Response.json({
             success: true,
