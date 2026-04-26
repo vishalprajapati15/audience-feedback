@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
         console.log('Suggested Message: ', text);
 
-        // Clean up the text to remove any extra content
+        // Clean up the text
         const cleanedText = text
             .split('\n')[0]
             .replace(/^["']|["']$/g, '')

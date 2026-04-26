@@ -7,7 +7,7 @@ import { User } from "next-auth";
 
 export async function DELETE(request: Request, context: { params: any }) {
 
-    // params can be a Promise in Next.js; await it before accessing
+    // params can be a Promise in Next.js await it before accessing
     const params = await context.params;
     const messageId = params['message-id'];
 
