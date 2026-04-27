@@ -113,56 +113,89 @@ const page = () => {
   }
 
   return (
-    <div className="my-8 mx-4 md:mx-8 rounded-full lg:mx-auto p-6 bg-white max-w-6xl">
-      <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2> {'  '}
-        <div className="flex items-center">
-          <input type="text" 
-          value={profileUrl}
-          disabled
-          className="input input-bordered w-full p-2 mr-2"
-          />
-          <Button onClick={copyToClipboard}>Copy</Button>
+    <div className="my-8 mx-4 md:mx-8 lg:mx-auto max-w-6xl">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-8">
+        <div className="mb-8 space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-4xl">
+            User Dashboard
+          </h1>
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            Manage your public feedback link, message preferences, and incoming audience messages.
+          </p>
         </div>
-      </div>
-      <div>
-        <Switch
-          checked={acceptMessages}
-          onCheckedChange={handleSwitchChange}
-          disabled={isSwitchLoading}
-        />
-        <span className="ml-2">Accept Messages: {acceptMessages? 'On': 'Off'}</span>
-      </div>
-      <Separator />
-      <Button 
-        className="ml-2"
-        variant="outline"      
-        onClick={(e)=>{
-          e.preventDefault();
-          fetchMessages(true);
-        }}
-      >
-        {isLoading? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-          
-        ): (
-          <RefreshCcw className="h-4 w-4"/>
-        )}
-      </Button>
 
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {messages.length > 0 ?(
-            messages.map((message, index)=>(
+        <div className="space-y-6 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/40 md:p-5">
+          <div className="space-y-2">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+              Copy Your Unique Link
+            </h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              Share this link so users can send you anonymous feedback.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <input
+              type="text"
+              value={profileUrl}
+              disabled
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 opacity-100 shadow-sm focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+            />
+            <Button
+              onClick={copyToClipboard}
+              className="sm:w-auto w-full bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+            >
+              Copy
+            </Button>
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-col gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/40 md:flex-row md:items-center md:justify-between md:p-5">
+          <div className="flex items-center gap-3">
+            <Switch
+              checked={acceptMessages}
+              onCheckedChange={handleSwitchChange}
+              disabled={isSwitchLoading}
+            />
+            <span className="text-sm font-medium text-slate-800 dark:text-slate-200">
+              Accept Messages: {acceptMessages ? 'On' : 'Off'}
+            </span>
+          </div>
+
+          <Button
+            className="w-full md:w-auto border-slate-300 bg-white text-slate-800 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+            variant="outline"
+            onClick={(e) => {
+              e.preventDefault();
+              fetchMessages(true);
+            }}
+          >
+            {isLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCcw className="mr-2 h-4 w-4" />
+            )}
+            Refresh Messages
+          </Button>
+        </div>
+
+        <Separator className="my-8 bg-slate-200 dark:bg-slate-700" />
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {messages.length > 0 ? (
+            messages.map((message)=>(
               <MessageCard
-              key={message._id.toString()}
-              message={message}
-              onMessageDelete={handleDeleteMessage}
+                key={message._id.toString()}
+                message={message}
+                onMessageDelete={handleDeleteMessage}
               />
             ))
-          ):(
-            <p>No Message to display.</p>
+          ) : (
+            <div className="col-span-full rounded-xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-600 dark:border-slate-700 dark:bg-slate-950/40 dark:text-slate-300">
+              No messages to display yet.
+            </div>
           )}
+        </div>
       </div>
     </div>
   )

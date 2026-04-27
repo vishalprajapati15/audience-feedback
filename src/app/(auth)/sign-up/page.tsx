@@ -25,7 +25,6 @@ const page = () => {
 
   const debounced = useDebounceCallback(setUsername, 300);
 
-  console.log(debounced)
   const router = useRouter();
 
   //zod
@@ -84,23 +83,24 @@ const page = () => {
   }
 
   return (
-    <div className='flex justify-center items-center min-h-screen bg-gray-100'>
-      <div className='w-full max-w-md px-8 space-y-8 bg-white rounded-lg shadow-md'>
-        <div className='text-center'>
-          <h1 className='text-4xl font-extrabold tracking-tight lg:text-5xl mb-6'>Join InsightLoop</h1>
-          <p className='mb-4'>Sign up to start your anonymous feedback journey.</p>
+    <div className='flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10 dark:bg-slate-950'>
+      <div className='w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-8'>
+        <div className='mb-8 space-y-2 text-center'>
+          <h1 className='text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 md:text-4xl'>Join InsightLoop</h1>
+          <p className='text-sm text-slate-600 dark:text-slate-300'>Sign up to start your anonymous feedback journey.</p>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
             <FormField
               control={form.control}
               name='username'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel className='text-slate-800 dark:text-slate-200'>Username</FormLabel>
                   <FormControl>
                     <Input
                       placeholder='username'
+                      className='border-slate-300 bg-white text-slate-900 placeholder:text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-400'
                       {...field}
                       onChange={(e) => {
                         field.onChange(e)
@@ -108,9 +108,7 @@ const page = () => {
                       }}
                     />
                   </FormControl>
-                  {isCheckingUsername &&
-                    <Loader2 className='animate-spin' />
-                  }
+                  {isCheckingUsername && <Loader2 className='h-4 w-4 animate-spin text-slate-500 dark:text-slate-300' />}
                   <p className={`text-sm ${usernameMessage === "Username is available!!" ? "text-green-500" : "text-red-500"}`}>
                     {usernameMessage}
                   </p>
@@ -124,11 +122,12 @@ const page = () => {
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className='text-slate-800 dark:text-slate-200'>Email</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
                       placeholder="email"
+                      className='border-slate-300 bg-white text-slate-900 placeholder:text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-400'
                       {...field}
                     />
                   </FormControl>
@@ -142,11 +141,12 @@ const page = () => {
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className='text-slate-800 dark:text-slate-200'>Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
                       placeholder="password"
+                      className='border-slate-300 bg-white text-slate-900 placeholder:text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-400'
                       {...field}
                     />
                   </FormControl>
@@ -155,7 +155,11 @@ const page = () => {
               )}
             />
 
-            <Button type="submit" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className='w-full bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200'
+            >
               {isSubmitting ? (
                 <>
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Submitting
@@ -165,10 +169,10 @@ const page = () => {
           </form>
         </Form>
 
-        <div className='text-center mt-4'>
+        <div className='mt-6 text-center text-sm text-slate-600 dark:text-slate-300'>
           <p>
             Already a member? {' '}
-            <Link href="/sign-in" className='text-blue-600 hover:text-blue-800 cursor-pointer'>
+            <Link href="/sign-in" className='font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300'>
               Sign In
             </Link>
           </p>

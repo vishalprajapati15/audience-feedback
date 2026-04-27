@@ -1,10 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-
-
-export interface Analysis {
-    label: string,
-    score: number
-} 
+import { Analysis } from "@/types/analysis.types"; 
 
 export interface Message extends Document {
     content: string;

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/context/AuthProvider";
+import { ThemeProvider } from "@/context/ThemeProvider";
 import {Toaster} from 'sonner';
 import Navbar from "@/components/Navbar";
 
@@ -29,14 +30,31 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <AuthProvider>
-        <body className="min-h-full flex flex-col">
-          {/* <Navbar /> */}
-          {children}
-          <Toaster/>
-        </body>
-      </AuthProvider>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const theme = localStorage.getItem('theme');
+                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                  document.documentElement.classList.add('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-white dark:bg-slate-950 text-black dark:text-white transition-colors duration-200">
+        <ThemeProvider>
+          <AuthProvider>
+            <Navbar />
+            {children}
+            <Toaster/>
+          </AuthProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

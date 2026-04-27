@@ -115,83 +115,118 @@ const UserProfilePage = () => {
 
 
   return (
-    <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">
-      <h1 className="text-4xl font-bold mb-6 text-center">Public Profile{username ? ` — @${username}` : ''}</h1>
+    <div className="mx-4 my-8 md:mx-8 lg:mx-auto max-w-4xl">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-8">
+        <div className="mb-8 space-y-2 text-center">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-4xl">
+            Public Profile{username ? ` — @${username}` : ''}
+          </h1>
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            Share anonymous feedback safely and pick a suggested message to send faster.
+          </p>
+          {!isCheckingAcceptance && !isUserAcceptingMessages && (
+            <p className="rounded-md border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-700 dark:border-amber-500/40 dark:bg-amber-950/40 dark:text-amber-300">
+              This user is currently not accepting messages.
+            </p>
+          )}
+        </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="content"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Send Anonymous Message to @{username}</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Write your anonymous message here"
-                    className="resize-none"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/40 md:p-5">
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-slate-800 dark:text-slate-200">
+                      Send Anonymous Message to @{username}
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Write your anonymous message here"
+                        className="min-h-32 resize-none border-slate-300 bg-white text-slate-900 placeholder:text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-400"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-          <div className="flex justify-center">
-            {isLoading ? (
-              <Button disabled>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Sending...
-              </Button>
-            ) : (
-              <Button type="submit" disabled={isLoading || !messageContent}>
-                Send
-              </Button>
-            )}
+            <div className="flex justify-center">
+              {isLoading ? (
+                <Button disabled className="w-full sm:w-auto">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sending...
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  disabled={isLoading || !messageContent}
+                  className="w-full sm:w-auto bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+                >
+                  Send Message
+                </Button>
+              )}
+            </div>
+          </form>
+        </Form>
+
+        <div className="my-8 space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/40 md:p-5">
+          <div className="space-y-2">
+            <Button
+              onClick={fetchSuggestedMessage}
+              className="w-full sm:w-auto bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+              disabled={isSuggestLoading}
+            >
+              {isSuggestLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Suggesting...
+                </>
+              ) : (
+                "Suggest Messages"
+              )}
+            </Button>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              Click any message below to use it in the input.
+            </p>
           </div>
 
-        </form>
-      </Form>
-
-      <div className="space-y-4 my-8">
-        <div className="space-y-2">
-          <Button
-            onClick={fetchSuggestedMessage}
-            className="my-4"
-            disabled={isSuggestLoading}
-          >
-            Suggest Messages
-          </Button>
-          <p>Click on any message below to select it.</p>
+          <Card className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+            <CardHeader>
+              <h2 className="text-lg font-medium text-slate-900 dark:text-slate-100">Messages</h2>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              {isSuggestLoading ? (
+                <p className="text-sm text-slate-600 dark:text-slate-300">Loading suggestions...</p>
+              ) : (
+                parseStringMessage(suggestedMessages || '').map((message, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    className="w-full justify-start border-slate-300 bg-white text-slate-800 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                    onClick={() => handleMessageClick(message)}
+                  >
+                    {message}
+                  </Button>
+                ))
+              )}
+            </CardContent>
+          </Card>
         </div>
-        <Card>
-          <CardHeader>
-            <h2 className="text-lg font-medium">Messages</h2>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-2">
-            {isSuggestLoading ? (
-              <p>Loading suggestions...</p>
-            ) : (
-              parseStringMessage(suggestedMessages || '').map((message, index) => (
-                <Button key={index}
-                  variant="outline"
-                  className="w-full justify-start"
-                  onClick={() => handleMessageClick(message)}
-                >
-                  {message}
-                </Button>
-              ))
-            )}
-          </CardContent>
-        </Card>
-      </div>
-      <Separator className="my-6" />
-      <div className="text-center">
-        <div className="mb-4">Get Your Message Board</div>
-        <Link href={'/sign-up'}>
-          <Button>Create Your Account</Button>
-        </Link>
+
+        <Separator className="my-6 bg-slate-200 dark:bg-slate-700" />
+        <div className="text-center">
+          <div className="mb-4 text-slate-700 dark:text-slate-200">Get Your Message Board</div>
+          <Link href={'/sign-up'}>
+            <Button className="bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200">
+              Create Your Account
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   )
