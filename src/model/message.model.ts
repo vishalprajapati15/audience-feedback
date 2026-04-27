@@ -1,10 +1,16 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+
+export interface Analysis {
+    label: string,
+    score: number
+} 
+
 export interface Message extends Document {
     content: string;
     userId: mongoose.Types.ObjectId;
-    sentiment?: string;
-    emotion?: string;
+    sentiment?: Analysis;
+    emotion?: Analysis;
     createdAt: Date;
 }
 
@@ -18,10 +24,12 @@ const messageSchema = new Schema<Message>({
         ref: "User"
     },
     sentiment:{
-        type: String
+        label: String,
+        score: Number
     },
     emotion:{
-        type: String
+        label: String,
+        score: Number
     },
     createdAt:{
         type: Date,
