@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/user.model";
-import { Message } from "@/model/user.model";
+import MessageModel from "@/model/message.model";
 
 
 export async function POST(request: Request) {
@@ -24,11 +24,13 @@ export async function POST(request: Request) {
             }, { status: 403 })
         }
 
-        const newMessage = { content, createdAt: new Date() };
+        const newMessage = new MessageModel({
+            content,
+            userId: user._id,
+            createdAt: new Date()
+        });
 
-        user.messages.push(newMessage as Message);
-
-        await user.save();
+        await newMessage.save();
 
         return Response.json({
             success: true,

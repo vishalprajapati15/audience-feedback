@@ -1,4 +1,4 @@
-import { Message } from "@/model/user.model";
+import { Message } from "@/model/message.model";
 
 
 

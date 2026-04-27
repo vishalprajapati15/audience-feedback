@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 import dbConnect from "@/lib/dbConnect";
-import UserModel from "@/model/user.model";
+import MessageModel from "@/model/message.model";
 import { User } from "next-auth";
 import mongoose from "mongoose";
 
@@ -22,26 +22,22 @@ export async function GET(request: Request) {
 
     try {
         console.log('Fetching messages for userId:', userId);
-        const messages = await UserModel.aggregate([
-            { $match: { _id: userId } },
-            { $unwind: '$messages' },
-            { $sort: { 'messages.createdAt': -1 } },
-            { $group: { _id: '$_id', messages: { $push: '$messages' } } }
-        ]);
+        const messages = await MessageModel.find({ userId }).sort({ createdAt: -1 });
 
         if (!messages || messages.length === 0) {
             console.log('No messages found for userId:', userId);
             return Response.json({
-                success: false,
-                message: 'Messages not found!!'
-            }, { status: 401 });
+                success: true,
+                messages: [],
+                message: 'No messages found!!'
+            }, { status: 200 });
         }
 
-        console.log('Message Received : ', messages[0].messages)
+        console.log('Message Received : ', messages)
 
         return Response.json({
             success: true,
-            messages: messages[0].messages,
+            messages: messages,
             message: 'Message fetched successfully!!'
         }, { status: 200 });
     } catch (error) {

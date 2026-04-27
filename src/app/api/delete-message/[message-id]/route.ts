@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/options";
 import dbConnect from "@/lib/dbConnect";
-import UserModel from "@/model/user.model";
+import MessageModel from "@/model/message.model";
 import { User } from "next-auth";
 
 
@@ -23,12 +23,9 @@ export async function DELETE(request: Request, context: { params: any }) {
     }
 
     try {
-        const updatedResult = await UserModel.updateOne(
-            { _id: user._id },
-            { $pull: { messages: { _id: messageId } } }
-        );
+        const deletedMessage = await MessageModel.findByIdAndDelete(messageId);
 
-        if (updatedResult.modifiedCount === 0) {
+        if (!deletedMessage) {
             return Response.json({
                 success: false,
                 message: 'Message not found or already deleted!!'

@@ -1,6 +1,6 @@
 'use client'
 import { toast } from "sonner"
-import { Message } from "@/model/user.model"
+import { Message } from "@/model/message.model"
 import { useCallback, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { useForm } from "react-hook-form"
