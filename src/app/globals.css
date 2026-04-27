@@ -198,4 +198,7 @@
   html {
     @apply font-sans;
   }
+  a {
+    @apply cursor-pointer;
+  }
 }

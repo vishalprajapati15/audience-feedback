@@ -15,7 +15,7 @@ const Navbar = () => {
     return (
         <nav className='p-4 md:p-6 shadow-md'>
             <div className='container mx-auto flex flex-col md:flex-row justify-between items-center'>
-                <Link href="/" className='flex items-center gap-2 group'>
+                <Link href="/" className='flex items-center gap-2 group cursor-pointer'>
                     <div className='p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg group-hover:shadow-lg transition-all duration-300'>
                         <Zap className='w-5 h-5 text-white' />
                     </div>

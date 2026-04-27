@@ -1,9 +1,9 @@
-'use client'
+"use client"
 import axios, { AxiosError } from "axios"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from 'react-hook-form'
 import { Loader2 } from "lucide-react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -18,7 +18,6 @@ import {
 import * as z from 'zod';
 import { useParams } from "next/navigation"
 import { messageSchema } from "@/schemas/messageSchema"
-import { useState } from "react"
 import { ApiResponse } from "@/types/ApiResponse"
 import { toast } from "sonner"
 import { Textarea } from "@/components/ui/textarea"
@@ -34,7 +33,7 @@ const initialMessageString = "What's your favorite movie?||Do you have any pets?
 
 
 
-const sendMessage = () => {
+const UserProfilePage = () => {
 
   const params = useParams<{ username: string }>();
   const username = params.username;
@@ -117,10 +116,10 @@ const sendMessage = () => {
 
   return (
     <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">
-      <h1 className="text-4xl font-bold mb-6 text-center">Publick Profile Link</h1>
+      <h1 className="text-4xl font-bold mb-6 text-center">Public Profile{username ? ` — @${username}` : ''}</h1>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y=6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="content"
@@ -168,16 +167,16 @@ const sendMessage = () => {
         </div>
         <Card>
           <CardHeader>
-            <h2>Messages</h2>
+            <h2 className="text-lg font-medium">Messages</h2>
           </CardHeader>
-          <CardContent className="flex flex-col space-y-4">
+          <CardContent className="flex flex-col gap-2">
             {isSuggestLoading ? (
               <p>Loading suggestions...</p>
             ) : (
-              parseStringMessage(suggestedMessages).map((message, index) => (
+              parseStringMessage(suggestedMessages || '').map((message, index) => (
                 <Button key={index}
                   variant="outline"
-                  className="mb-2"
+                  className="w-full justify-start"
                   onClick={() => handleMessageClick(message)}
                 >
                   {message}
@@ -198,4 +197,4 @@ const sendMessage = () => {
   )
 }
 
-export default sendMessage
+export default UserProfilePage
