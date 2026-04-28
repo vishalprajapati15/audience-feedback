@@ -6,11 +6,18 @@ import { User } from 'next-auth'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
     const { data: session } = useSession();
+    const router = useRouter();
+    const handleLogout = async () => {
+        await signOut({ redirect: false });
+        router.push('/sign-in');
+    }
+
     const user: User = session?.user as User
 
     return (
@@ -48,8 +55,8 @@ const Navbar = () => {
                                     </Link>
 
                                     <button
-                                        onClick={() => signOut()}
-                                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+                                        onClick={handleLogout}
+                                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-800"
                                     >
                                         Logout
                                     </button>

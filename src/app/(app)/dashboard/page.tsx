@@ -14,12 +14,14 @@ import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { Loader2, RefreshCcw } from "lucide-react"
 import MessageCard from "@/components/MessageCard"
+import { useRouter } from "next/navigation"
 
 const page = () => {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
+  const router = useRouter();
 
   const handleDeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id.toString() !== messageId));
@@ -73,8 +75,14 @@ const page = () => {
     }
   }, [setIsLoading, setMessages]);
 
-  useEffect(()=>{
-    if(!session || !session.user){
+  useEffect(() => {
+    if (session === null) {
+      router.push('/sign-in');
+    }
+  }, [session, router]);
+
+  useEffect(() => {
+    if (!session || !session.user) {
       return
     }
     fetchMessages();
@@ -82,7 +90,7 @@ const page = () => {
 
   }, [session, setValue, fetchAcceptMessage, fetchMessages])
 
-  const handleSwitchChange = async ()=>{
+  const handleSwitchChange = async () => {
     try {
       const response = await axios.post<ApiResponse>('/api/accept-message', {
         acceptMessage: !acceptMessages
@@ -95,19 +103,22 @@ const page = () => {
     }
   }
 
-  if(!session || !session.user){
-    return 
-    <div>
-      Please Login!!
-    </div>
+  if (session === undefined) {
+    return <div className="text-center font-semibold text-4xl">
+      Loading...
+    </div>;
   }
 
-  const {username} = session?.user as User;
+  if (session === null) {
+    return null;
+  }
+
+  const username = (session?.user as User | undefined)?.username || "";
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
 
   const profileUrl = `${baseUrl}/u/${username}`;
 
-  const copyToClipboard = ()=>{
+  const copyToClipboard = () => {
     navigator.clipboard.writeText(profileUrl);
     toast.success("Url Copied successfully!!");
   }
@@ -183,7 +194,7 @@ const page = () => {
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {messages.length > 0 ? (
-            messages.map((message)=>(
+            messages.map((message) => (
               <MessageCard
                 key={message._id.toString()}
                 message={message}
