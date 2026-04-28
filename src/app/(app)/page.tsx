@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/carousel"
 import Autoplay from 'embla-carousel-autoplay'
 import messages from '@/data/messages.json'
-import { MessageCircle, Sparkles, TrendingUp } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 
 
 const Home = () => {
@@ -33,7 +33,9 @@ const Home = () => {
         <div className="w-full flex justify-center mb-8">
           <Carousel
             plugins={[Autoplay({ delay: 3000 })]}
-            className="w-full max-w-2xl">
+            opts={{ loop: true }}
+            className="w-full max-w-2xl"
+          >
             <CarouselContent className="-ml-2 md:-ml-4">
               {
                 messages.map((message, index) => {
@@ -78,26 +80,12 @@ const Home = () => {
                 })
               }
             </CarouselContent>
-            <CarouselPrevious className="hidden md:flex -left-16 hover:bg-blue-600 hover:text-white transition-colors" />
-            <CarouselNext className="hidden md:flex -right-16 hover:bg-blue-600 hover:text-white transition-colors" />
+            <CarouselPrevious className="hidden md:flex -left-16 hover:bg-blue-600 hover:text-white bg-white dark:bg-gray-800 text-gray-800 dark:text-white transition-colors" />
+            <CarouselNext className="hidden md:flex -right-16 hover:bg-blue-600 hover:text-white bg-white dark:bg-gray-800 text-gray-800 dark:text-white transition-colors" />
           </Carousel>
         </div>
 
-        {/* Carousel indicators/dots */}
-        <div className="flex gap-2 justify-center">
-          {messages.map((_, index) => (
-            <div
-              key={index}
-              className="h-2 rounded-full transition-all duration-300 bg-gray-300 hover:bg-blue-600 cursor-pointer"
-              style={{ width: index === 0 ? '24px' : '8px' }}
-            ></div>
-          ))}
-        </div>
-
       </main>
-      <footer className="text-center text-sm text-gray-600 p-4 sm:p-6 border-t border-gray-200">
-        © 2026 InsightLoop. All rights reserved
-      </footer>
     </>
   )
 }

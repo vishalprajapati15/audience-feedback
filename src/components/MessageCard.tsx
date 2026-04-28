@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -42,10 +41,10 @@ const MessageCard = ({message, onMessageDelete}: MessageCardProps) => {
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="w-full border rounded-lg shadow-sm overflow-hidden">
+      <CardHeader className="p-4 md:p-6">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-base line-clamp-2">{message.content}</CardTitle>
+          <CardTitle className="text-lg font-medium line-clamp-2">{message.content}</CardTitle>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" size="sm"><X className="w-4 h-4"/></Button>
@@ -59,13 +58,13 @@ const MessageCard = ({message, onMessageDelete}: MessageCardProps) => {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel className="text-black">Cancel</AlertDialogCancel>
                 <AlertDialogAction onClick={handleDeleteConfirm}>Continue</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
-        <CardDescription>
+        <CardDescription className="text-sm text-gray-500">
           {new Date(message.createdAt).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',

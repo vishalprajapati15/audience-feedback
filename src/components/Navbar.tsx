@@ -5,12 +5,12 @@ import { useSession, signOut } from 'next-auth/react'
 import { User } from 'next-auth'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { useState } from 'react'
 
 
 const Navbar = () => {
-
+    const [open, setOpen] = useState(false);
     const { data: session } = useSession();
-
     const user: User = session?.user as User
 
     return (
@@ -28,10 +28,33 @@ const Navbar = () => {
                     <ThemeToggle />
                     {
                         session ? (
-                            <>
-                                <span className='mr-4 '>Welcome , {user?.username || user?.email}</span>
-                                <Button className='w-full md:w-auto' onClick={() => signOut()}>Logout</Button>
-                            </>
+                            <div
+                                className="relative mr-4 inline-block"
+                                onMouseEnter={() => setOpen(true)}
+                                onMouseLeave={() => setOpen(false)}
+                            >
+                                <div className="w-10 h-10 text-xl flex items-center justify-center rounded-full bg-blue-600 text-white font-bold cursor-pointer">
+                                    {(user?.username || user?.email || "U")[0].toUpperCase()}
+                                </div>
+
+                                <div
+                                    className={`absolute right-0 top-full mt-1 w-40 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 z-50 transition-all duration-200 ${open ? "opacity-100 visible" : "opacity-0 invisible"}`}
+                                >
+                                    <Link
+                                        href="/dashboard"
+                                        className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+                                    >
+                                        Dashboard
+                                    </Link>
+
+                                    <button
+                                        onClick={() => signOut()}
+                                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            </div>
                         ) : (
                             <Button className='w-full md:w-auto' asChild>
                                 <Link href='/sign-in'>Login</Link>
